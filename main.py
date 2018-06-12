@@ -1,4 +1,4 @@
-from src.utils import diff_wordmode
+from src.paragraph_correction import ParagraphCorrection
 
 
 if __name__ == '__main__':
@@ -6,4 +6,4 @@ if __name__ == '__main__':
         correct = f.read()
     with open('./test-data/wrong.txt') as f:
         wrong = f.read()
-    diffs = diff_wordmode(wrong, correct)
+    para_crct = ParagraphCorrection(wrong, correct)
