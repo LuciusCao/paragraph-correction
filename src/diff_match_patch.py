@@ -419,7 +419,7 @@ class diff_match_patch:
       # Modifying text would create many large strings to garbage collect.
       lineStart = 0
       lineEnd = -1
-      while lineEnd < len(text) - 1:
+      while lineEnd < len(text):
         commaEnd = text.find(',', lineStart)
         periodEnd = text.find('.', lineStart)
         spaceEnd = text.find(' ', lineStart)
@@ -432,12 +432,16 @@ class diff_match_patch:
           lineEnd = sorted(endArray)[0]
         else:
           lineEnd = -1
-        print(lineStart, lineEnd, '\n')
+        #  print('before', lineStart, lineEnd)
 
         if lineEnd == -1:
           #  lineEnd = len(text) - 1
         #  line = text[lineStart:lineEnd + 1]
           lineEnd = len(text)
+
+        if lineEnd == lineStart:
+          lineEnd += 1
+
         line = text[lineStart:lineEnd]
 
         if line in lineHash:
@@ -450,7 +454,10 @@ class diff_match_patch:
           lineArray.append(line)
           lineHash[line] = len(lineArray) - 1
           chars.append(chr(len(lineArray) - 1))
-        lineStart = lineEnd + 1
+
+        lineStart = lineEnd
+
+        #  print('after', lineStart, lineEnd, '\n')
       return "".join(chars)
 
     # Allocate 2/3rds of the space for text1, the rest for text2.
