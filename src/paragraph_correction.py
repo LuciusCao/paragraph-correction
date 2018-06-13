@@ -18,6 +18,7 @@ class ParagraphCorrection:
         word_array = words[2]
         full_diffs = d.diff_main(word_text_one, word_text_two, False)
         d.diff_charsToLines(full_diffs, word_array)
+        full_diffs = [(c, s.strip()) for c, s in full_diffs]
         return full_diffs
 
     def __diff_only(self):
@@ -37,12 +38,13 @@ class ParagraphCorrection:
                 end_index = i
                 started = False
 
-            if start_index and end_index:
+            start_w_end = start_index and end_index
+            start_wo_end = i == len(self.full_diffs) - 1 and started
+
+            if start_w_end or start_wo_end:
                 s = slice(start_index, end_index)
                 answer_key[cur_answer] = self.full_diffs[s]
                 cur_answer += 1
                 start_index = end_index = None
 
         return answer_key
-
-
