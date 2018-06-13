@@ -14,6 +14,15 @@ import pytest
          {0: [(-1, 'am'), (1, 'was')],
           1: [(-1, 'boy'), (1, 'girl')]},
          ),
+        ('I am a boy.', 'I was a girl.',
+         [(0, 'I'), (-1, 'am'),
+          (1, 'was'), (0, 'a'),
+          (-1, 'boy'), (1, 'girl'), (0, '.')],
+         [(-1, 'am'), (1, 'was'),
+          (-1, 'boy'), (1, 'girl')],
+         {0: [(-1, 'am'), (1, 'was')],
+          1: [(-1, 'boy'), (1, 'girl')]},
+         ),
     ])
 def test_initialization(wrong_paragraph, correct_paragraph, full_diffs,
                         diff, answer_key):

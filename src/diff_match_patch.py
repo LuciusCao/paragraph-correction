@@ -31,6 +31,7 @@ import sys
 import time
 import urllib.parse
 
+
 class diff_match_patch:
   """Class containing the diff, match and patch methods.
 
@@ -419,10 +420,25 @@ class diff_match_patch:
       lineStart = 0
       lineEnd = -1
       while lineEnd < len(text) - 1:
-        lineEnd = text.find(' ', lineStart)
+        commaEnd = text.find(',', lineStart)
+        periodEnd = text.find('.', lineStart)
+        spaceEnd = text.find(' ', lineStart)
+        endArray = [commaEnd, periodEnd, spaceEnd]
+        #  print(endArray)
+        endArray = [elem for elem in endArray if elem != -1]
+        #  print(endArray)
+
+        if endArray != []:
+          lineEnd = sorted(endArray)[0]
+        else:
+          lineEnd = -1
+        print(lineStart, lineEnd, '\n')
+
         if lineEnd == -1:
-          lineEnd = len(text) - 1
-        line = text[lineStart:lineEnd + 1]
+          #  lineEnd = len(text) - 1
+        #  line = text[lineStart:lineEnd + 1]
+          lineEnd = len(text)
+        line = text[lineStart:lineEnd]
 
         if line in lineHash:
           chars.append(chr(lineHash[line]))
