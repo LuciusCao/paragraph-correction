@@ -16,7 +16,7 @@ import pytest
         ),
         ('I am, a boy', 'I was, a girl',
          [(0, 'I'), (-1, 'am'),
-          (1, 'was'), (0, ','), (0, 'a'),
+          (1, 'was'), (0, ', a'),
           (-1, 'boy'), (1, 'girl')],
          [(-1, 'am'), (1, 'was'),
           (-1, 'boy'), (1, 'girl')],

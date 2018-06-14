@@ -5,11 +5,11 @@ class ParagraphCorrection:
     def __init__(self, wrong_paragraph, correct_paragraph):
         self.wrong_paragraph = wrong_paragraph
         self.correct_paragraph = correct_paragraph
-        self.full_diffs = self.__diff_wordmode()
-        self.diff = self.__diff_only()
-        self.answer_key = self.__get_answer_from_diff()
+        self.full_diffs = self.diff_wordmode()
+        self.diff = self.diff_only()
+        self.answer_key = self.get_answer_from_diff()
 
-    def __diff_wordmode(self, paragraph_one=None, paragraph_two=None):
+    def diff_wordmode(self, paragraph_one=None, paragraph_two=None):
         if paragraph_one is None:
             paragraph_one = self.wrong_paragraph
 
@@ -26,13 +26,13 @@ class ParagraphCorrection:
         full_diffs = [(c, s.strip()) for c, s in full_diffs]
         return full_diffs
 
-    def __diff_only(self, full_diffs=None):
+    def diff_only(self, full_diffs=None):
         if full_diffs is None:
             full_diffs = self.full_diffs
 
         return [diff for diff in full_diffs if diff[0] != 0]
 
-    def __get_answer_from_diff(self, full_diffs=None):
+    def get_answer_from_diff(self, full_diffs=None):
         if full_diffs is None:
             full_diffs = self.full_diffs
         answer = {}

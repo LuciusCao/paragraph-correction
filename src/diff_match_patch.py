@@ -395,12 +395,12 @@ class diff_match_patch:
     Note:
       This is a method that add by Lucius Cao to use diff_match_patch for words
     """
-    lineArray = []  # e.g. lineArray[4] == "Hello\n"
-    lineHash = {}   # e.g. lineHash["Hello\n"] == 4
+    wordArray = []  # e.g. lineArray[4] == "Hello\n"
+    wordHash = {}   # e.g. lineHash["Hello\n"] == 4
 
     # "\x00" is a valid character, but various debuggers don't like it.
     # So we'll insert a junk entry to avoid generating a null character.
-    lineArray.append('')
+    wordArray.append('')
 
     def diff_linesToCharsMunge(text):
       """Split a text into an array of strings.  Reduce the texts to a string
@@ -413,59 +413,58 @@ class diff_match_patch:
       Returns:
         Encoded string.
       """
-      chars = []
+      words = []
       # Walk the text, pulling out a substring for each line.
       # text.split('\n') would would temporarily double our memory footprint.
       # Modifying text would create many large strings to garbage collect.
-      lineStart = 0
-      lineEnd = -1
-      while lineEnd < len(text):
-        commaEnd = text.find(',', lineStart)
-        periodEnd = text.find('.', lineStart)
-        spaceEnd = text.find(' ', lineStart)
-        endArray = [commaEnd, periodEnd, spaceEnd]
-        #  print(endArray)
+      wordStart = 0
+      wordEnd = -1
+      while wordEnd < len(text):
+        commaEnd = text.find(',', wordStart)
+        periodEnd = text.find('.', wordStart)
+        spaceEnd = text.find(' ', wordStart)
+        leftQuoteEnd = text.find('“', wordStart)
+        rightQuoteEnd = text.find('”', wordEnd)
+        quoteEnd = text.find('"', wordEnd)
+
+        endArray = [commaEnd, periodEnd, spaceEnd, leftQuoteEnd, rightQuoteEnd,
+                    quoteEnd]
         endArray = [elem for elem in endArray if elem != -1]
-        #  print(endArray)
 
         if endArray != []:
-          lineEnd = sorted(endArray)[0]
+          wordEnd = sorted(endArray)[0]
         else:
-          lineEnd = -1
-        #  print('before', lineStart, lineEnd)
+          wordEnd = -1
 
-        if lineEnd == -1:
-          #  lineEnd = len(text) - 1
-        #  line = text[lineStart:lineEnd + 1]
-          lineEnd = len(text)
+        if wordEnd == -1:
+          wordEnd = len(text)
 
-        if lineEnd == lineStart:
-          lineEnd += 1
+        if wordEnd == wordStart:
+          wordEnd += 1
 
-        line = text[lineStart:lineEnd]
+        word = text[wordStart:wordEnd]
 
-        if line in lineHash:
-          chars.append(chr(lineHash[line]))
+        if word in wordHash:
+          words.append(chr(wordHash[word]))
         else:
-          if len(lineArray) == maxLines:
+          if len(wordArray) == maxLines:
             # Bail out at 1114111 because chr(1114112) throws.
-            line = text[lineStart:]
-            lineEnd = len(text)
-          lineArray.append(line)
-          lineHash[line] = len(lineArray) - 1
-          chars.append(chr(len(lineArray) - 1))
+            word = text[wordStart:]
+            wordEnd = len(text)
+          wordArray.append(word)
+          wordHash[word] = len(wordArray) - 1
+          words.append(chr(len(wordArray) - 1))
 
-        lineStart = lineEnd
+        wordStart = wordEnd
 
-        #  print('after', lineStart, lineEnd, '\n')
-      return "".join(chars)
+      return "".join(words)
 
     # Allocate 2/3rds of the space for text1, the rest for text2.
     maxLines = 666666
-    chars1 = diff_linesToCharsMunge(text1)
+    words1 = diff_linesToCharsMunge(text1)
     maxLines = 1114111
-    chars2 = diff_linesToCharsMunge(text2)
-    return (chars1, chars2, lineArray)
+    words2 = diff_linesToCharsMunge(text2)
+    return (words1, words2, wordArray)
 
   def diff_linesToChars(self, text1, text2):
     """Split two texts into an array of strings.  Reduce the texts to a string
