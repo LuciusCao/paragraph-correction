@@ -7,6 +7,6 @@ if __name__ == '__main__':
     with open('./test-data/wrong.txt') as f:
         wrong = f.read()
     with open('./test-data/responese.txt') as f:
-        responese = f.read()
+        response = f.read()
 
     para_crct = ParagraphCorrection(wrong, correct)
